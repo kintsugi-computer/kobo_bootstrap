@@ -1,6 +1,5 @@
 #!/bin/sh
 # With thanks to NiLuJe
-#
 
 # Start by renicing ourselves to a neutral value, to avoid any mishap...
 renice 0 -p $$
@@ -11,7 +10,7 @@ renice 0 -p $$
 #       Background your stuff if you need to run long-lasting tasks.
 
 # Start the launcher in the background, after a setsid call to make very very sure udev won't kill us ;).
-setsid /usr/local/bootstrap/bin/bootstrap.sh &
+setsid /usr/local/bootstrap/bootstrap.sh &
 
 # Done :)
 exit 0
