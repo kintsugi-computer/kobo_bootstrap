@@ -1,16 +1,27 @@
 #!/bin/sh
-# With thanks to NiLuJe
 
-# Start by renicing ourselves to a neutral value, to avoid any mishap...
-renice 0 -p $$
+# Spawn the actual bootstrap script as a daemon
 
-# I run early at boot! Do fun stuff here!
-# NOTE: onboard *should* be mounted by that point, but if you want to be safe, double-check.
-# NOTE: Remember to keep things short & sweet, because we're blocking udev here...
-#       Background your stuff if you need to run long-lasting tasks.
+THISSCRIPT="/usr/local/bootstrap/bootstrap-init.sh"
 
-# Start the launcher in the background, after a setsid call to make very very sure udev won't kill us ;).
-setsid /usr/local/bootstrap/bootstrap.sh &
-
-# Done :)
-exit 0
+case "x-${1}" in 
+    x-stage_one)
+        # Second entry point: set working dir to / and rebind stdin, stdout, stderr
+        cd /
+        "${THISSCRIPT}" stage_two "$@" </dev/null >/dev/null 2>/dev/null &
+        exit 0
+        ;;
+    x-stage_two)
+        # Third entry point. We are a deamon now, in our own process
+        # group, with / as working directory and detached from the
+        # original stdin, stdout and stderr
+        
+        # start the actual work
+        /usr/local/bootstrap/bootstrap.sh
+        ;;
+    *)  
+        # First entry point: detach from the process group
+        setsid "${THISSCRIPT}" stage_one "$@" &
+        exit 0
+        ;;
+esac

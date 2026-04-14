@@ -1,0 +1,28 @@
+name: Build and publish release
+
+permissions:
+  contents: write
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Build
+        run: make
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          files: KoboRoot.tgz
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
