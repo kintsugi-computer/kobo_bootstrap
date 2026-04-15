@@ -16,3 +16,24 @@ function start_network {
   logmsg "-- No active network"
   return 1
 }
+
+function stop_process {
+  process_name="${1}"
+  for count in 1 2 3 ; do
+    if pidof "${process_name}"; then
+      /usr/bin/killall "${process_name}"
+    else
+      break
+    fi
+    if ! pidof "${process_name}"; then
+      break
+    fi
+    /bin/usleep 200
+  done
+  if pidof "${process_name}"; then
+    logmsg "-- failed terminating ${process_name}"
+  else
+    logmsg "-- terminated ${process_name}"
+  fi
+
+}

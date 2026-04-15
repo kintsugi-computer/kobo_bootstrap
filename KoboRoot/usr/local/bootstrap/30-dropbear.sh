@@ -6,6 +6,11 @@ source /usr/local/bootstrap/bootstrap-functions.sh
 rootfs="/mnt/chroot/rootfs"
 run_chroot="/mnt/chroot/bin/run_chroot.sh"
 
+if [ "${1}" == "shutdown" ]; then
+  stop_process dropbear
+  exit 
+fi
+
 if [ -d "${rootfs}" ]; then
   logmsg "-- ${rootfs} is present"
 

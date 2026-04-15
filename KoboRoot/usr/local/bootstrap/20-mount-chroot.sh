@@ -10,11 +10,22 @@ CHROOT_MNT="/mnt/chroot"
 EXTERNAL_SD="/dev/mmcblk1"
 ROOTFS="${CHROOT_MNT}/rootfs"
 MOUNT_CHROOT="${CHROOT_MNT}/bin/mount_chroot.sh"
+UNMOUNT_CHROOT="${CHROOT_MNT}/bin/unmount_chroot.sh"
 
 MINIROOTFS="alpine-minirootfs-3.23.3-armhf.tar.gz"
 MINIROOTFS_URL="https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/armhf"
 CHROOT_SCRIPTS_LATEST="https://api.github.com/repos/kintsugi-computer/kobo_chroot_scripts/releases/latest"
 CHROOT_SCRIPTS_URL=""
+
+if [ "${1}" == "shutdown" ]; then
+  if [ -x "${UNMOUNT_CHROOT}" -a -e "${ROOTFS}" ]; then
+    if mountpoint "${ROOTFS}/dev"; then
+      logmsg "-- Unmounting chroot filesystems"
+      ${UNMOUNT_CHROOT}
+    fi
+  fi
+  exit
+fi
 
 if [ -e "${EXTERNAL_SD}" ]; then
   logmsg "-- External SD present as ${EXTERNAL_SD}"

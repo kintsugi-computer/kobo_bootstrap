@@ -1,6 +1,6 @@
 #!/bin/sh
-MOUNTPOINT="/mnt/onboard/"
-BOOTSTRAP_LOGDIR="${MOUNTPOINT}.bootstrap"
+MOUNTPOINT="/mnt/onboard"
+BOOTSTRAP_LOGDIR="${MOUNTPOINT}/.bootstrap"
 BOOTSTRAP_LOG="/dev/null"
 
 source /usr/local/bootstrap/bootstrap-functions.sh
