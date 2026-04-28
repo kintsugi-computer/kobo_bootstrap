@@ -3,8 +3,6 @@ MOUNTPOINT="/mnt/onboard"
 BOOTSTRAP_LOGDIR="${MOUNTPOINT}/.bootstrap"
 BOOTSTRAP_LOG="/dev/null"
 
-touch /SHUTDOWN
-
 source /usr/local/bootstrap/bootstrap-functions.sh
 
 if mountpoint "${MOUNTPOINT}"; then

@@ -12,8 +12,11 @@ ROOTFS="${CHROOT_MNT}/rootfs"
 MOUNT_CHROOT="${CHROOT_MNT}/bin/mount_chroot.sh"
 UNMOUNT_CHROOT="${CHROOT_MNT}/bin/unmount_chroot.sh"
 
-MINIROOTFS="alpine-minirootfs-3.23.3-armhf.tar.gz"
-MINIROOTFS_URL="https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/armhf"
+ALPINE_RELEASE=3.22
+ALPINE_REVISION=4
+
+MINIROOTFS="alpine-minirootfs-${ALPINE_RELEASE}.${ALPINE_REVISION}-armhf.tar.gz"
+MINIROOTFS_URL="https://dl-cdn.alpinelinux.org/alpine/v${ALPINE_RELEASE}/releases/armhf"
 CHROOT_SCRIPTS_LATEST="https://api.github.com/repos/kintsugi-computer/kobo_chroot_scripts/releases/latest"
 CHROOT_SCRIPTS_URL=""
 
@@ -45,7 +48,7 @@ if [ -e "${EXTERNAL_SD}" ]; then
 
   if /bin/mountpoint "${CHROOT_MNT}"; then
     if [ ! -e "${ROOTFS}" ]; then
-      logmsg "-- Filesystem mounted at ${CHROOT_MNT}"
+      logmsg "-- ${ROOTFS} not present"
 
       if start_network; then
 
@@ -79,6 +82,10 @@ if [ -e "${EXTERNAL_SD}" ]; then
 
         logmsg "-- Downloading ${MINIROOTFS}"
         /usr/bin/wget -P "${CHROOT_MNT}" "${MINIROOTFS_URL}/${MINIROOTFS}"
+        if [ ! -e "${CHROOT_MNT}/${MINIROOTFS}" ]; then
+          logmsg "-- Download of ${MINIROOTFS} failed"
+          exit 1
+        fi
         /bin/mkdir -p "${ROOTFS}"
 
         logmsg "-- Unpacking ${MINIROOTFS}"

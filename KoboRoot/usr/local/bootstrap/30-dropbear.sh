@@ -55,6 +55,7 @@ if [ -d "${rootfs}" ]; then
   if [ -e  "${rootfs}/usr/sbin/dropbear" ]; then
     logmsg "-- Starting dropbear in chroot at ${rootfs}"
     "${run_chroot}" /usr/sbin/dropbear -RB
+    logmsg "-- Started dropbear in chroot at ${rootfs}: $?"
   fi
 else
   logmsg "-- ${rootfs} not present"
